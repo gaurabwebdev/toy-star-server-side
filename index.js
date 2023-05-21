@@ -34,7 +34,6 @@ async function run() {
     });
 
     app.get("/alltoys", async (req, res) => {
-      console.log(req.query);
       let query = {};
       if (req.query?.category) {
         query = { sub_category: req.query.category };
@@ -63,7 +62,6 @@ async function run() {
     // });
 
     app.get("/usertoys", async (req, res) => {
-      // console.log(req.query);
       let query = {};
 
       if (req.query?.email) {
@@ -100,7 +98,6 @@ async function run() {
     app.post("/usertoys", async (req, res) => {
       const userToy = req.body;
       const result = await userToyCollection.insertOne(userToy);
-      console.log(result);
       res.send(result);
     });
 
@@ -121,17 +118,6 @@ async function run() {
       );
       res.send(result);
     });
-
-    // app.delete("/usertoys", async (req, res) => {
-    //   const targetedToy = req.query;
-    //   console.log(targetedToy);
-    //   res.send(req.body);
-    //   if (targetedToy) {
-    //     const query = { _id: new ObjectId(targetedToy.delete) };
-    //     const result = await userToyCollection.deleteOne(query);
-    //     res.send(result);
-    //   }
-    // });
 
     // Send a ping to confirm a successful connection
     await client.db("admin").command({ ping: 1 });
