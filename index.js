@@ -29,6 +29,8 @@ async function run() {
       .db("starToys")
       .collection("usertoyCollection");
 
+    const blogsCollection = client.db("starToys").collection("blogs");
+
     app.get("/", (req, res) => {
       res.send("Welcome To starToy Server");
     });
@@ -63,6 +65,7 @@ async function run() {
 
     app.get("/usertoys", async (req, res) => {
       let query = {};
+      const toysLimit = parseInt(req.query.imit);
 
       if (req.query?.email) {
         query = { sellerEmail: req.query.email };
@@ -74,6 +77,13 @@ async function run() {
       if (req.query?.delete) {
         query = { _id: new ObjectId(req.query.delete) };
         const result = await userToyCollection.deleteOne(query);
+        res.send(result);
+        return;
+      }
+
+      if (req.query?.limit) {
+        const cursor = userToyCollection.find().limit(toysLimit);
+        const result = await cursor.toArray();
         res.send(result);
         return;
       }
@@ -116,6 +126,19 @@ async function run() {
         updatedDoc,
         options
       );
+      res.send(result);
+    });
+
+    app.get("/blogs", async (req, res) => {
+      const cursor = blogsCollection.find();
+      const result = await cursor.toArray();
+      res.send(result);
+    });
+
+    app.get("/blogs/:id", async (req, res) => {
+      const query = { _id: new ObjectId(req.params.id) };
+      console.log(req.params.id);
+      const result = await blogsCollection.findOne(query);
       res.send(result);
     });
 
